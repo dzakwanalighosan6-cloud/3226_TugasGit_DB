@@ -21,6 +21,11 @@ Route::get('/my-ticket', [EventController::class, 'ticket'])->name('ticket');
 
 // Rute Admin Area (Modul 5 & UTS)
 Route::prefix('admin')->name('admin.')->group(function () {
+    // Tambahan untuk memperbaiki error 404 saat klik Dashboard
+    Route::get('/', function () {
+        return redirect()->route('admin.categories.index');
+    });
+
     // Rute Resource untuk CRUD Event
     Route::resource('events', EventAdminController::class);
     

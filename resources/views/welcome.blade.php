@@ -48,7 +48,25 @@
             @forelse($events as $event)
             <div class="group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden">
                 <div class="relative overflow-hidden aspect-[3/4]">
-                    <img src="https://placehold.co/200x600" alt="{{ $event->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    
+                    @php
+                        $imagePath = 'https://placehold.co/200x600';
+                        $titleLow = strtolower($event->title);
+                        
+                        if (str_contains($titleLow, 'mobile legend')) {
+                            $imagePath = asset('assets/ml.jpg');
+                        } elseif (str_contains($titleLow, 'valorant')) {
+                            $imagePath = asset('assets/valorant.jpg');
+                        } elseif (str_contains($titleLow, 'ui/ux')) {
+                            $imagePath = asset('assets/ui ux.jpg');
+                        } elseif (str_contains($titleLow, 'amikom fest')) {
+                            $imagePath = asset('assets/amikom fest.jpg');
+                        } elseif ($event->image) {
+                            $imagePath = asset('assets/' . $event->image);
+                        }
+                    @endphp
+                    
+                    <img src="{{ $imagePath }}" alt="{{ $event->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <div class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur rounded-lg text-xs font-bold uppercase text-indigo-600">
                         {{ $event->category->name }}
                     </div>
