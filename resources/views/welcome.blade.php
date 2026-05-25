@@ -74,4 +74,25 @@
             @endforelse
         </div>
     </section>
+
+    <section class="max-w-7xl mx-auto px-6 py-12 border-t border-slate-100 mt-12">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-extrabold mb-2">Partner Resmi Kami</h2>
+            <p class="text-slate-500 font-medium">Platform AmikomEventHub didukung oleh berbagai partner hebat.</p>
+        </div>
+
+        <div class="flex flex-wrap justify-center items-center gap-10 md:gap-16 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-500">
+            @forelse($partners as $partner)
+                <div class="flex flex-col items-center justify-center group cursor-pointer transition">
+                    @if($partner->logo_url)
+                        <img src="{{ asset('storage/' . $partner->logo_url) }}" alt="{{ $partner->name }}" class="h-16 w-auto object-contain group-hover:scale-110 transition duration-300">
+                    @else
+                        <span class="text-2xl font-black text-slate-400 group-hover:text-indigo-600 group-hover:scale-110 transition duration-300">{{ $partner->name }}</span>
+                    @endif
+                </div>
+            @empty
+                <p class="text-slate-400 italic">Belum ada partner yang ditambahkan.</p>
+            @endforelse
+        </div>
+    </section>
 @endsection

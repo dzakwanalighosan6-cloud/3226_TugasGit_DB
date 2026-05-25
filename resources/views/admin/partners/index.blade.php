@@ -1,23 +1,23 @@
 @extends('layouts.admin')
 
-@section('title', 'Kelola Kategori')
-@section('page_title', 'Kelola Kategori')
-@section('page_subtitle', 'Atur daftar kategori event Anda.')
+@section('title', 'Kelola Partner')
+@section('page_title', 'Kelola Partner')
+@section('page_subtitle', 'Atur data partner dan sponsor event Anda.')
 
 @section('content')
 <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-    <form action="{{ route('admin.categories.index') }}" method="GET" class="w-full md:w-1/2 relative">
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama kategori..." class="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 outline-none transition font-medium">
+    <form action="{{ route('admin.partners.index') }}" method="GET" class="w-full md:w-1/2 relative">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama partner..." class="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 outline-none transition font-medium">
         <svg class="w-6 h-6 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
         @if(request('search'))
-            <a href="{{ route('admin.categories.index') }}" class="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-slate-400 hover:text-rose-500 font-bold">Clear</a>
+            <a href="{{ route('admin.partners.index') }}" class="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-slate-400 hover:text-rose-500 font-bold">Clear</a>
         @endif
     </form>
 
-    <a href="{{ route('admin.categories.create') }}" class="w-full md:w-auto px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 active:scale-95 transition text-center whitespace-nowrap">
-        + Tambah Kategori
+    <a href="{{ route('admin.partners.create') }}" class="w-full md:w-auto px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 active:scale-95 transition text-center whitespace-nowrap">
+        + Tambah Partner
     </a>
 </div>
 
@@ -27,27 +27,31 @@
             <thead class="bg-slate-50 text-slate-400 uppercase text-[10px] font-black tracking-widest">
                 <tr>
                     <th class="px-8 py-4 w-16">No</th>
-                    <th class="px-8 py-4">Nama Kategori</th>
-                    <th class="px-8 py-4">Slug</th>
+                    <th class="px-8 py-4">Logo</th>
+                    <th class="px-8 py-4">Nama Partner</th>
                     <th class="px-8 py-4">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y border-t">
-                @forelse ($categories as $index => $category)
+                @forelse ($partners as $index => $partner)
                 <tr class="hover:bg-slate-50/50 transition">
-                    <td class="px-8 py-6 font-bold text-slate-400">{{ $categories->firstItem() + $index }}</td>
+                    <td class="px-8 py-6 font-bold text-slate-400">{{ $partners->firstItem() + $index }}</td>
                     <td class="px-8 py-6">
-                        <p class="font-black text-slate-800">{{ $category->name }}</p>
+                        @if($partner->logo_url)
+                            <img src="{{ asset('storage/' . $partner->logo_url) }}" class="h-12 w-auto object-contain rounded">
+                        @else
+                            <span class="text-xs text-slate-400 italic">Tanpa Logo</span>
+                        @endif
                     </td>
-                    <td class="px-8 py-6 text-slate-500 font-medium">
-                        {{ $category->slug }}
+                    <td class="px-8 py-6">
+                        <p class="font-black text-slate-800">{{ $partner->name }}</p>
                     </td>
                     <td class="px-8 py-6">
                         <div class="flex gap-2">
-                            <a href="{{ route('admin.categories.edit', $category->id) }}" class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white transition">
+                            <a href="{{ route('admin.partners.edit', $partner->id) }}" class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white transition">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                             </a>
-                            <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kategori ini? (Event yang terkait juga akan ikut terhapus lho!)');">
+                            <form action="{{ route('admin.partners.destroy', $partner->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus partner ini?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="p-2.5 bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-600 hover:text-white transition">
@@ -61,9 +65,9 @@
                 <tr>
                     <td colspan="4" class="px-8 py-10 text-center text-slate-500">
                         @if(request('search'))
-                            Tidak ada kategori yang cocok dengan "{{ request('search') }}".
+                            Tidak ada partner yang cocok dengan pencarian "<b>{{ request('search') }}</b>".
                         @else
-                            Belum ada data kategori.
+                            Belum ada data partner yang ditambahkan.
                         @endif
                     </td>
                 </tr>
@@ -72,7 +76,7 @@
         </table>
     </div>
     <div class="px-8 py-6 bg-slate-50/50 border-t items-center">
-        {{ $categories->links() }}
+        {{ $partners->links() }}
     </div>
 </div>
 @endsection
